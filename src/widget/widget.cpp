@@ -5,8 +5,9 @@
 #include <QPainter>
 
 
-Widget::Widget(QWidget *parent)
-: QWidget(parent), timer_{this}, spider_{{10, 10}, "assets/spider.png"} {
+Widget::Widget(KeyBindings keyBindings, QWidget *parent):
+QWidget(parent), spider_{{10, 10}, "assets/spider.png", 1, 3},
+keyBindings_(keyBindings), timer_{this} {
     timer_.start(10);
     connect(&timer_, &QTimer::timeout, this, &Widget::MoveSpiderAutomatically);
 }
@@ -30,27 +31,22 @@ void Widget::keyPressEvent(QKeyEvent* event) {
     QWidget::keyPressEvent(event);
 
     bool timer_active = timer_.isActive();
-    switch (event->key()) {
-        case Qt::Key_W:
-            dirs_[0] = true;
-            break;
-        case Qt::Key_A:
-            dirs_[1] = true;
-            break;
-        case Qt::Key_S:
-            dirs_[2] = true;
-            break;
-        case Qt::Key_D:
-            dirs_[3] = true;
-            break;
-        case Qt::Key_Shift:
-            spider_.SetVelocity(3);
-            break;
-        case Qt::Key_Space:
-            if (timer_active)
-                timer_.stop();
-            else
-                timer_.start(10);
+    auto key = event->key();
+    if (key == keyBindings_.up)
+        dirs_[0] = true;
+    else if (key == keyBindings_.left)
+        dirs_[1] = true;
+    else if (key == keyBindings_.down)
+        dirs_[2] = true;
+    else if (key == keyBindings_.right)
+        dirs_[3] = true;
+    else if (key == keyBindings_.acceleration)
+        spider_.SetVelocity(spider_.GetVelocityFast());
+    else if (key == keyBindings_.switchMode) {
+        if (timer_active)
+            timer_.stop();
+        else
+            timer_.start(10);
     }
 
     int dx = 0, dy = 0;
@@ -63,8 +59,6 @@ void Widget::keyPressEvent(QKeyEvent* event) {
     if (dirs_[3])
         ++dx;
 
-    spider_.SetVelocity(event->modifiers() == Qt::ShiftModifier ? 3 : 1);
-
     if (!(timer_active || spider_.Move(QPoint(dx, dy), rect())))
         repaint();
 }
@@ -72,22 +66,17 @@ void Widget::keyPressEvent(QKeyEvent* event) {
 void Widget::keyReleaseEvent(QKeyEvent *event) {
     QWidget::keyReleaseEvent(event);
 
-    switch (event->key()) {
-        case Qt::Key_W:
-            dirs_[0] = false;
-            break;
-        case Qt::Key_A:
-            dirs_[1] = false;
-            break;
-        case Qt::Key_S:
-            dirs_[2] = false;
-            break;
-        case Qt::Key_D:
-            dirs_[3] = false;
-            break;
-        case Qt::Key_Shift:
-            spider_.SetVelocity(1);
-    }
+    auto key = event->key();
+    if (key == keyBindings_.up)
+        dirs_[0] = false;
+    else if (key == keyBindings_.left)
+        dirs_[1] = false;
+    else if (key == keyBindings_.down)
+        dirs_[2] = false;
+    else if (key == keyBindings_.right)
+        dirs_[3] = false;
+    else if (key == keyBindings_.acceleration)
+        spider_.SetVelocity(spider_.GetVelocitySlow());
 }
 
 void Widget::paintEvent(QPaintEvent* event) {

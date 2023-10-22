@@ -14,17 +14,22 @@ public:
     explicit Spider(
         QPoint pos,
         const QString& image_path,
-        unsigned int velocity = 1,
+        unsigned int velocitySlow = 1,
+        unsigned int velocityFast = 3,
         QObject *parent = nullptr
     );
-public slots:
+public:
     int Move(const QPoint&, const QRect&);
-    void SetVelocity(int);
-    void Draw(QPainter*);
+    void SetVelocity(unsigned int);
+    [[nodiscard]] unsigned int GetVelocitySlow() const noexcept;
+    [[nodiscard]] unsigned int GetVelocityFast() const noexcept;
+    void Draw(QPainter*) const;
 private:
     QPoint pos_;
     QPixmap image_;
-    int velocity_;
+    const unsigned int velocitySlow_;
+    const unsigned int velocityFast_;
+    unsigned int velocity_;
     LimitedQueue<QPoint, 3> web_;
 };
 
