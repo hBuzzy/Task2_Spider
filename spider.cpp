@@ -8,8 +8,7 @@ Spider::Spider(int lag, QPoint position, QObject *parent) : QObject{parent} {
   parentDir.cdUp();
   QString parentPath = parentDir.absolutePath();
 
-  spiderImage_ = QPixmap(parentPath + "/Task2_Spider" + "/rac.png");
-  qDebug() << spiderImage_.size();
+  spiderImage_ = QPixmap(parentPath + "Task2_Spider-katnag" + "/rac.png");
 
   position_ = position;
 }
