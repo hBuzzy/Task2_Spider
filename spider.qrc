@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="sps">spider_my.png</file>
+    </qresource>
+</RCC>
