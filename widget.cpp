@@ -1,5 +1,9 @@
 #include "widget.h"
 
+#include <QDebug>
+#include <QKeyEvent>
+#include <QTimer>
+
 Widget::Widget(QWidget *parent) : QWidget(parent) {
   spider_ = new Spider(10, QPoint(0, 0), this);
   drawTimer_ = new QTimer(this);
@@ -53,11 +57,4 @@ void Widget::keyPressEvent(QKeyEvent *event) {
   updateTimer(spider_->GetLag());
 }
 
-void Widget::updateTimer(int lag) {
-  drawTimer_->stop();
-  delete drawTimer_;
-
-  drawTimer_ = new QTimer(this);
-  connect(drawTimer_, &QTimer::timeout, this, &Widget::drawSpider);
-  drawTimer_->start(lag);
-}
+void Widget::updateTimer(int lag) { drawTimer_->setInterval(lag); }

@@ -1,8 +1,6 @@
 #ifndef WIDGET_H
 #define WIDGET_H
 
-#include <QKeyEvent>
-#include <QTimer>
 #include <QWidget>
 
 #include "spider.h"

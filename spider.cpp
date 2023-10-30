@@ -1,5 +1,10 @@
 #include "spider.h"
 
+#include <math.h>
+
+#include <QDebug>
+#include <QDir>
+
 Spider::Spider(int lag, QPoint position, QObject *parent) : QObject{parent} {
   lag_ = lag;
 
@@ -15,47 +20,65 @@ Spider::Spider(int lag, QPoint position, QObject *parent) : QObject{parent} {
 
 QList<QPoint> Spider::GetWeb() { return web_; }
 
-void Spider::Move(int widgetWidth, int widgetHeight) {
+QPoint Spider::GetPosition() { return position_; }
+
+QPoint Spider::ConstrainPointToBounds(QPoint point, int widgetWidth,
+                                      int widgetHeight) {
+  int spiderHeight = spiderImage_.height();
+  int spiderWidth = spiderImage_.width();
+
+  int x = point.x();
+  int y = point.y();
+
+  if (x < 0) {
+    x = 0;
+  }
+  if (y + spiderWidth > widgetWidth) {
+    x = widgetWidth - spiderWidth;
+  }
+  if (y < 0) {
+    y = 0;
+  }
+  if (y + spiderHeight > widgetHeight) {
+    y = widgetHeight - spiderHeight;
+  }
+
+  return (QPoint(x, y));
+}
+
+QPoint Spider::CalculateNewPosition(int widgetWidth, int widgetHeight) {
   static double t = 0.0;
+  double step = 0.005;
+  const int xAmplitude = 100;
+  const int yAmplitude = 85;
+  const int halfDelimeter = 2;
 
   double x = sin(t) * (exp(cos(t)) - 2 * cos(4 * t) - pow(sin(t / 12), 5));
   double y = cos(t) * (exp(cos(t)) - 2 * cos(4 * t) - pow(sin(t / 12), 5));
 
-  int centerX = static_cast<int>(widgetWidth / 2 + 100 * x);
-  int centerY = static_cast<int>(widgetHeight / 2 + 100 * y);
+  int centerX = static_cast<int>(widgetWidth / halfDelimeter + xAmplitude * x);
+  int centerY = static_cast<int>(widgetHeight / halfDelimeter + yAmplitude * y);
 
   int spiderHeight = spiderImage_.height();
   int spiderWidth = spiderImage_.width();
 
-  int spiderCenterX = centerX - spiderWidth / 2;
-  int spiderCenterY = centerY - spiderHeight / 2;
+  int spiderCenterX = centerX - spiderWidth / halfDelimeter;
+  int spiderCenterY = centerY - spiderHeight / halfDelimeter;
 
-  if (spiderCenterX < 0) {
-    spiderCenterX = 0;
-  }
-  if (spiderCenterX + spiderWidth > widgetWidth) {
-    spiderCenterX = widgetWidth - spiderWidth;
-  }
-  if (spiderCenterY < 0) {
-    spiderCenterY = 0;
-  }
-  if (spiderCenterY + spiderHeight > widgetHeight) {
-    spiderCenterY = widgetHeight - spiderHeight;
-  }
+  t += step;
 
-  web_.append(QPoint(spiderCenterX, spiderCenterY + spiderHeight));
-
-  position_ = QPoint(spiderCenterX, spiderCenterY);
-
-  t += 0.005;
+  return QPoint(spiderCenterX, spiderCenterY);
 }
 
-QPoint Spider::GetPosition() { return position_; }
-
 QPixmap Spider::GetImage() { return spiderImage_; }
+
+void Spider::Move(int widgetWidth, int widgetHeight) {
+  position_ =
+      ConstrainPointToBounds(CalculateNewPosition(widgetWidth, widgetHeight),
+                             widgetWidth, widgetHeight);
+  web_.append(QPoint(position_.x(), position_.y() + spiderImage_.height()));
+}
 
 void Spider::SetLag(int lag) { lag_ = lag; }
 
 int Spider::GetLag() { return lag_; }
-
-void Spider::MoveSpider() { emit SpiderMoved(position_); }
