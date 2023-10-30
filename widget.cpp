@@ -35,7 +35,7 @@ void Widget::paintEvent(QPaintEvent *event) {
                      spider_->GetImage());
 }
 
-void Widget::drawSpider() {
+void Widget::DrawSpider() {
   spider_->Move(windowRect_.width(), windowRect_.height());
 
   update();

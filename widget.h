@@ -12,7 +12,7 @@ class Widget : public QWidget {
   Widget(QWidget *parent = nullptr);
   ~Widget();
 
-  void drawSpider();
+  void DrawSpider();
 
  protected:
   virtual void paintEvent(QPaintEvent *event);
