@@ -8,7 +8,7 @@ Widget::Widget(QWidget *parent) : QWidget(parent) {
   spider_ = new Spider(10, QPoint(0, 0), this);
   drawTimer_ = new QTimer(this);
 
-  connect(drawTimer_, &QTimer::timeout, this, &Widget::drawSpider);
+  connect(drawTimer_, &QTimer::timeout, this, &Widget::DrawSpider);
 
   drawTimer_->start(spider_->GetLag());
 }
