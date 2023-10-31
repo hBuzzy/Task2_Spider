@@ -9,22 +9,28 @@ QList<QLine> Spider::GetWebLines() { return webLines; }
 
 void Spider::SetWeb(const QRect &windowRect) {
     float pi = 3.14;
-    webLines.append(QLine(currentPosition, QPoint(currentPosition.x() + speedVector.x(), currentPosition.y() + speedVector.y())));
-    currentPosition = QPoint(currentPosition.x() + speedVector.x(), currentPosition.y() + speedVector.y());
-    if (currentPosition.x() > windowRect.right()){
-        currentPosition.setX() = windowRect.right();
+    int xMoving = currentPosition.x() + speedVector.x();
+    int yMoving = currentPosition.y() + speedVector.y();
+    if (xMoving > windowRect.width()){
+        xMoving = windowRect.width();
+        speedVector.setX(-speedVector.x());
     }
-//    if (currentPosition.x() < 0){
-//        currentPosition.x() = 0;
-//    }
-//    if (currentPosition.y() > windowRect.bootom()){
-//        currentPosition.y() = windowRect.bootom();
-//    }
-//    if (currentPosition.y() < 0){
-//        currentPosition.y() = 0;
-//    }
-}
+    if (xMoving < 0){
+        xMoving = 0;
+        speedVector.setX(-speedVector.x());
+    }
+    if (yMoving > windowRect.height()){
+        yMoving = windowRect.height();
+        speedVector.setY(-speedVector.y());
+    }
+    if (yMoving < 0){
+        yMoving = 0;
+        speedVector.setY(-speedVector.y());
+    }
 
+    webLines.append(QLine(currentPosition, QPoint(xMoving, yMoving)));
+    currentPosition = QPoint(xMoving, yMoving);
+}
 void Spider::SetSpeedVector(const QPoint &speedAddValue)
 {
     speedVector = QPoint(speedVector.x() + speedAddValue.x(), speedVector.y() + speedAddValue.y());

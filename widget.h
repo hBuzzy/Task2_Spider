@@ -2,6 +2,7 @@
 #define WIDGET_H
 
 #include <QWidget>
+#include <QTimer>
 
 class Spider;
 
@@ -18,7 +19,8 @@ class Widget : public QWidget {
 
   private:
   Spider *spider;
-
+  QTimer *timer;
+  void tikTime();
 };
 
 #endif  // WIDGET_H

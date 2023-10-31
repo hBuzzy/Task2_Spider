@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QPoint>
 #include <QLine>
+#include <QRect>
 
 class Spider : public QObject {
   Q_OBJECT
