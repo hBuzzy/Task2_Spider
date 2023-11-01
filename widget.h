@@ -2,35 +2,27 @@
 #define WIDGET_H
 
 #include <QWidget>
-#include <QPixmap>
-#include <QPaintEvent>
-#include <QPainter>
-#include <QTimer>
+
+#include "spider.h"
 
 class Widget : public QWidget {
-  Q_OBJECT
+    Q_OBJECT
 public:
     Widget(QWidget *parent = nullptr);
     ~Widget();
-    void MoveSpider();
-    void ParametersSpider();
-    void VecPointLine();
-    int GetRotateAngle();
+
+protected:
+    void SetTimer();
     void paintEvent(QPaintEvent *event);
+    QSize GetSizeWidget();
 
-    QPixmap SpiderImage_;
-    QPixmap rotatedSpiderImage_;
+private:
+    QPixmap image_;
+    QSize sizeWidget_;
+    QTimer *timer_;
+    int sizePoint_;
+    int time_;
 
-    QPoint NewPoint_;
-    QPoint SpiderPoint_, PointLine_;
-    QVector<QPoint> points_;
-    QTimer *SpiderTimer_;
-
-    int SizeSpider_;
-    int SpiderSpeed_;
-    int SpiderDirX_, SpiderDirY_;
-    int AngleRotate_;
-    int SizePoint_;
-    int NumbTimer;
+    Spider *spider_;
 };
 #endif  // WIDGET_H
