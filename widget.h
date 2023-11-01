@@ -18,9 +18,9 @@ class Widget : public QWidget {
   void keyPressEvent(QKeyEvent *event) override;
 
   private:
-  Spider *spider;
-  QTimer *timer;
-  void tikTime();
+  Spider *spider_;
+  QTimer *timer_;
+  void tikTime_();
 };
 
 #endif  // WIDGET_H

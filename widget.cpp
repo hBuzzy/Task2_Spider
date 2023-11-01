@@ -5,48 +5,48 @@
 #include <QKeyEvent>
 
 Widget::Widget(QWidget *parent) : QWidget(parent) {
-    spider = new Spider(this);
-    timer = new QTimer();
-    connect(timer, &QTimer::timeout, this, &Widget::tikTime);
-    timer->start(500);
+    spider_ = new Spider(this);
+    timer_ = new QTimer();
+    connect(timer_, &QTimer::timeout, this, &Widget::tikTime_);
+    timer_->start(500);
 }
 
 Widget::~Widget() {}
 
 void Widget::paintEvent(QPaintEvent *){
-
     QPainter painter;
     painter.begin(this);
+    QPixmap pixmap(10, 10);
+    pixmap.fill(Qt::black);
+    painter.drawPixmap(spider_->GetCurrentPosition().x() - 5, spider_->GetCurrentPosition().y() - 5, pixmap);
+    QList currentLines = spider_->GetWebLines();
 
-    //не хотит паук появляться... пытаюсь разобраться, но пока так
-    QRectF target(10.0, 20.0, 80.0, 60.0);
-    QRectF source(0.0, 0.0, 70.0, 40.0);
-    QPixmap pixmap(":pauk.png");
-    painter.drawPixmap(target, pixmap, source);
-
-    QList currentLines = spider->GetWebLines();
     for (int i = 0; i < currentLines.size(); i++) {
         painter.drawLine(currentLines[i]);
     }
     painter.end();
 }
+
 void Widget::keyPressEvent(QKeyEvent *event) {
+    const int linkage = 0;
+    const int step = 10;
     if(event->key() == Qt::Key_Up){
-        spider->SetSpeedVector(QPoint(0,-10));
+        spider_->SetSpeedVector(QPoint(linkage,-step));
     }
     if(event->key() == Qt::Key_Down){
-        spider->SetSpeedVector(QPoint(0, 10));
+        spider_->SetSpeedVector(QPoint(linkage, step));
     }
     if(event->key() == Qt::Key_Left){
-        spider->SetSpeedVector(QPoint(-10, 0));
+        spider_->SetSpeedVector(QPoint(-step, linkage));
     }
     if(event->key() == Qt::Key_Right){
-        spider->SetSpeedVector(QPoint(10, 0));
+        spider_->SetSpeedVector(QPoint(step, linkage));
     }
     this->update();
 }
-void Widget::tikTime()
+
+void Widget::tikTime_()
 {
-    spider->SetWeb(Widget::rect());
+    spider_->SetWeb(Widget::rect());
     this->update();
 }
