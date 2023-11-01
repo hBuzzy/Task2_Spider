@@ -11,10 +11,12 @@ CONFIG += c++17
 SOURCES += \
     main.cpp \
     spider.cpp \
+    spiderweb.cpp \
     widget.cpp
 
 HEADERS += \
     spider.h \
+    spiderweb.h \
     widget.h
 
 # Default rules for deployment.
@@ -23,4 +25,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
-    README.md
+    README.md \
+    spider.png
+
+RESOURCES += \
+    images.qrc \
+

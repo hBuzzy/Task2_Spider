@@ -2,12 +2,31 @@
 #define WIDGET_H
 
 #include <QWidget>
+#include <QPoint>
+#include <QVector>
 
-class Widget : public QWidget {
-  Q_OBJECT
+#include "spider.h"
+#include "spiderweb.h"
 
- public:
-  Widget(QWidget *parent = nullptr);
-  ~Widget();
+class Widget : public QWidget
+{
+    Q_OBJECT
+
+public:
+    Widget(QWidget *parent = nullptr);
+    ~Widget();
+
+protected:
+    void paintEvent(QPaintEvent *event) override;
+
+private:
+    Spider spider_;
+    SpiderWeb spiderWeb_;
+    QVector<QPoint> webPoints;
+
+
+public slots:
+    void AddPointToWeb(const QPoint &position);
 };
-#endif  // WIDGET_H
+
+#endif // WIDGET_H
