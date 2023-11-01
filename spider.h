@@ -9,7 +9,7 @@ public:
     explicit Spider(QWidget *widget);
 
     const int kTime = 50;
-    const QVector<int> kRotateAngles = {135, 45, -135, -45};
+
     void MoveSpider();
     QPixmap GetRotateImage();
     QPoint GetSpiderPos();
@@ -25,7 +25,7 @@ private:
     QPixmap rotatedSpiderImage_;
     QPoint spiderPos_;
     QVector<QPoint> wayPoints_;
-
+    QVector<int> rotateAngles_ = {135, 45, -135, -45};
     QPoint nextWayPoint_;
 
     int size_;

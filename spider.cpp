@@ -38,9 +38,9 @@ void Spider::SetParameters() {
 }
 
 void Spider::SetNextPoint() {
-    int CenterImage_ = 2;
-    nextWayPoint_.setX(spiderPos_.x() + rotatedSpiderImage_.width() / CenterImage_);
-    nextWayPoint_.setY(spiderPos_.y() + rotatedSpiderImage_.height() / CenterImage_);
+    int centerImage_ = 2;
+    nextWayPoint_.setX(spiderPos_.x() + rotatedSpiderImage_.width() / centerImage_);
+    nextWayPoint_.setY(spiderPos_.y() + rotatedSpiderImage_.height() / centerImage_);
     wayPoints_.append(nextWayPoint_);
 }
 
@@ -50,13 +50,13 @@ QPixmap Spider::GetRotateImage() {
 
 int Spider::GetRotateAngle() {
     if (spiderDirectionX_ > 0 && spiderDirectionY_ > 0) {
-        return kRotateAngles[0];
+        return rotateAngles_[0];
     } else if (spiderDirectionX_ > 0 && spiderDirectionY_ < 0) {
-        return kRotateAngles[1];
+        return rotateAngles_[1];
     } else if (spiderDirectionX_ < 0 && spiderDirectionY_ > 0) {
-        return kRotateAngles[2];
+        return rotateAngles_[2];
     } else if (spiderDirectionX_ < 0 && spiderDirectionY_ < 0) {
-        return kRotateAngles[3];
+        return rotateAngles_[3];
     }
     return 0;
 }
