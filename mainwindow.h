@@ -6,6 +6,7 @@
 #include <QPainter>
 #include <QVector>
 #include <QTimer>
+#include <spider.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -20,24 +21,12 @@ public:
     void paintEvent(QPaintEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
+    void update();
     ~MainWindow();
 
-public slots:
-    void addPoint();
-
 private:
-    void updateState(QKeyEvent *event, bool state);
-
-private:
-    const int kStep = 2;
     Ui::MainWindow *ui_;
-    int isDown_;
-    int isUp_;
-    int isLeft_;
-    int isRight_;
-    int x_;
-    int y_;
-    QVector<QPoint> *points_;
+    Spider *spider_;
     QTimer *timer_;
 };
 #endif // MAINWINDOW_H
