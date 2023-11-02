@@ -15,6 +15,11 @@ class Widget : public QWidget
 
  private:
   void AddToTimerInterval(int milliseconds);
+
+ protected:
+  virtual void paintEvent(QPaintEvent* event);
+  virtual void keyPressEvent(QKeyEvent *event);
+
  private slots:
   void ShowMessage();
 
@@ -22,9 +27,5 @@ class Widget : public QWidget
   Spider* spider_;
   QRect windowRect_;
   QTimer* spiderMoveTimer_;
-
- protected:
-  virtual void paintEvent(QPaintEvent* event);
-  void keyPressEvent(QKeyEvent *event);
 };
 #endif  // WIDGET_H

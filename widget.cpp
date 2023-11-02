@@ -10,7 +10,9 @@ Widget::Widget(QWidget *parent) : QWidget(parent) {
   spiderMoveTimer_ = new QTimer(this);
   spiderMoveTimer_->setInterval(500);
   windowRect_ = rect();
+
   connect(spiderMoveTimer_, &QTimer::timeout, this, &Widget::ShowMessage);
+
   connect(spiderMoveTimer_, &QTimer::timeout, [this](){ spider_->ChangePosition(windowRect_); spider_->UpdateSpiderPosition(); repaint(); });
 }
 
@@ -27,21 +29,23 @@ void Widget::paintEvent(QPaintEvent* event) {
 void Widget::keyPressEvent(QKeyEvent *event) {
   int deltaTimerInterval = 50;
   windowRect_ = rect();
+  int positionFirst = 2;
+  int positionSecond = 0;
   if (event->key() == Qt::Key_Space) {
     spiderMoveTimer_->start();
-    spider_->ChangePosition(2, 2);
+    spider_->ChangePosition(positionFirst, positionFirst);
   } else if (event->key() == Qt::Key_Minus) {
     AddToTimerInterval(deltaTimerInterval);
   } else if (event->key() == Qt::Key_Plus) {
     AddToTimerInterval(-deltaTimerInterval);
   } else if (event->key() == Qt::Key_Down) {
-    spider_->ChangePosition(0, 2);
+    spider_->ChangePosition(positionSecond, positionFirst);
   } else if (event->key() == Qt::Key_Up) {
-    spider_->ChangePosition(0, -2);
+    spider_->ChangePosition(positionSecond, -positionFirst);
   } else if (event->key() == Qt::Key_Left) {
-      spider_->ChangePosition(-2, 0);
+      spider_->ChangePosition(-positionFirst, positionSecond);
   } else if (event->key() == Qt::Key_Right) {
-      spider_->ChangePosition(2, 0);
+      spider_->ChangePosition(positionFirst, positionSecond);
   }
 }
 

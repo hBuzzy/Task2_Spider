@@ -6,8 +6,7 @@
 #include <QWidget>
 #include <cmath>
 
-class Spider : public QObject
-{
+class Spider : public QObject {
   Q_OBJECT
  public:
   explicit Spider(const QPoint& position, QObject *parent = nullptr);

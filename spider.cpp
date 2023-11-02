@@ -1,5 +1,6 @@
 #include "spider.h"
 #include <QDebug>
+
 Spider::Spider(const QPoint& position, QObject *parent) : QObject{parent} {
     position_ = position;
     web_.append(position_);
@@ -8,7 +9,6 @@ Spider::Spider(const QPoint& position, QObject *parent) : QObject{parent} {
     dx_ = 2;
     dy_ = 2;
     size_ = size;
-
 }
 
 void Spider::DrawSpider(QPainter* painter) {
@@ -32,7 +32,6 @@ void Spider::ChangePosition(int x = 1, int y = 1) {
 }
 
 void Spider::UpdateSpiderPosition() {
-
   position_.setX(position_.x() + dx_);
   position_.setY(position_.y() + dy_);
   web_.append(position_);
