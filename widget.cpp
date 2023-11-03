@@ -9,8 +9,9 @@ Widget::Widget(QWidget *parent) : QWidget(parent) {
   windowCenter_ = QPoint(rect().width()/2,rect().height()/2);
   spider_ = new Spider(windowCenter_);
   timer_ = new QTimer(this);
-  timer_->start(100);
-  timer_->setInterval(100);
+  minInterval_ = 100;
+  timer_->start(minInterval_);
+  timer_->setInterval(minInterval_);
 
   connect(timer_, &QTimer::timeout, [this](){ spider_->MoveSpider(); repaint(); });
 }
@@ -39,8 +40,8 @@ void Widget::keyPressEvent(QKeyEvent* event) {
 }
 
 void Widget::AddToTimerInterval(int milliseconds) {
-  int minInterval = 100;
-  int maxInterval = 1000;
+  int minInterval = minInterval_;
+  int maxInterval = 10 * minInterval_;
   int newInterval = timer_->interval() + milliseconds;
 
   newInterval = qBound(minInterval, newInterval, maxInterval);

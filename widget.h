@@ -25,6 +25,7 @@ class Widget : public QWidget {
   Spider* spider_;
   QTimer* timer_;
   QPoint windowCenter_;
+  int minInterval_;
 };
 
 #endif  // WIDGET_H
