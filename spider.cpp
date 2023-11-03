@@ -25,7 +25,7 @@ void Spider::paint(QWidget *ctx) {
     }
 
     painter.rotate(0);
-    painter.drawPixmap(x_ - (kStep * 20) / 2, y_ + 0, kStep * 20, kStep * 20, spider);
+    painter.drawPixmap(x_ - (kStep * scale) / denominator, y_, kStep * scale, kStep * scale, spider);
 
 }
 

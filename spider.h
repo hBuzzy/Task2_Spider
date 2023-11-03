@@ -21,6 +21,8 @@ public slots:
 
 private:
     const int kStep = 2;
+    const int scale = 20;
+    const int denominator = 2;
     int isDown_;
     int isUp_;
     int isLeft_;
