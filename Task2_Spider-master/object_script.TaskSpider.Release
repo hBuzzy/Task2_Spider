@@ -1,0 +1,12 @@
+release/web.o
+release/web.o
+release/web.o
+release/web.o
+release/main.o
+release/spider.o
+release/web.o
+release/widget.o
+release/qrc_res.o
+release/moc_spider.o
+release/moc_web.o
+release/moc_widget.o
