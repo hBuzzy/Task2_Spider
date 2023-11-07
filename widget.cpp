@@ -17,11 +17,10 @@ void Widget::paintEvent(QPaintEvent *){
     QPainter painter;
     painter.begin(this);
 
-    const int sizePoxmap = 10;
-    QPixmap pixmap(sizePoxmap, sizePoxmap);
-    pixmap.fill(Qt::black);
 
-    painter.drawPixmap(spider_->GetCurrentPosition().x() - sizePoxmap/2, spider_->GetCurrentPosition().y() - sizePoxmap/2, pixmap);
+    const int sizePoxmap = 50;
+    QPixmap pixmap("/Users/Mura/Task2_Spider/pauk.png");
+    painter.drawPixmap(spider_->GetCurrentPosition().x() - sizePoxmap/2, spider_->GetCurrentPosition().y() - sizePoxmap/2, sizePoxmap, sizePoxmap, pixmap);
     QList currentLines = spider_->GetWebLines();
 
     for (int i = 0; i < currentLines.size(); i++) {
