@@ -3,14 +3,21 @@
 #include <QPainter>
 #include <QSlider>
 #include <QVBoxLayout>
+#include "widget.h"
+#include <QPainter>
+#include <QSlider>
+#include <QVBoxLayout>
+#include <QMouseEvent>
+#include <QDebug>
 
-Widget::Widget(QWidget *parent) : QWidget(parent), _speed(5) {
-    _spider = new Spider(this);
-    connect(_spider, &Spider::positionChanged, this, &Widget::spiderPositionChanged);
+Widget::Widget(QWidget *parent) : QWidget(parent), speed_(5), drawing_(false) {
+    setMouseTracking(true);
+    spider_ = new Spider(this);
+    connect(spider_, &Spider::positionChanged, this, &Widget::spiderPositionChanged);
 
-    _timer = new QTimer(this);
-    connect(_timer, &QTimer::timeout, this, &Widget::moveSpider);
-    _timer->start(100);
+    timer_ = new QTimer(this);
+    connect(timer_, &QTimer::timeout, this, &Widget::moveSpider);
+    timer_->start(100);
 
     QSlider *speedSlider = new QSlider(Qt::Horizontal);
     speedSlider->setMinimum(1);
@@ -22,20 +29,19 @@ Widget::Widget(QWidget *parent) : QWidget(parent), _speed(5) {
     layout->addWidget(speedSlider);
     setLayout(layout);
 
-    _spider->startMoving();
+    spider_->startMoving();
 }
 
 Widget::~Widget() {
-    delete _spider;
+    delete spider_;
 }
 
 void Widget::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
-    painter.drawPixmap(_spider->getPosition(), _spider->getSpiderImage());
+    painter.drawPixmap(spider_->getPosition(), spider_->getSpiderImage());
 
-    // Рисуем линию паутины
-    painter.setPen(QPen(Qt::black, 2));  // Выбираем черный цвет и толщину линии
-    for (const QPoint &point : _spider->getPath()) {
+    painter.setPen(QPen(Qt::black, 2));
+    for (const QPoint &point : spider_->getPath()) {
         painter.drawPoint(point);
     }
 }
@@ -45,10 +51,57 @@ void Widget::spiderPositionChanged(const QPoint &position) {
 }
 
 void Widget::speedSliderChanged(int value) {
-    _speed = value;
-    _spider->setSpeed(_speed);
+    speed_ = value;
+    spider_->setSpeed(speed_);
 }
 
 void Widget::moveSpider() {
-    _spider->moveSpider();
+    if (drawing_) {
+            QPoint globalCursorPos = mapToGlobal(center_);
+            spider_->moveSpider(globalCursorPos);
+        }
+}
+
+void Widget::mouseMoveEvent(QMouseEvent *event) {
+    if (drawing_) {
+        center_ = event->pos();
+
+        qDebug() << center_.x() << " " << center_.y();
+    }
+}
+
+void Widget::mousePressEvent(QMouseEvent *event) {
+    if (event->button() == Qt::LeftButton) {
+        drawing_ = true;
+        center_ = event->pos();
+        setCursorStyle();
+
+        spider_->moveSpider(mapToGlobal(center_));
+    }
+}
+
+void Widget::updateThreshold(int value) {
+  lineColor_.setRed(value);
+  setCursorStyle();
+  update();
+}
+
+void Widget::updateLineWidth(int value) {
+  lineWidth_ = value;
+  update();
+}
+
+void Widget::setCursorStyle() {
+  if (drawing_) {
+    setCursor(Qt::CrossCursor);
+  } else {
+    setCursor(Qt::ArrowCursor);
+  }
+}
+
+void Widget::mouseReleaseEvent(QMouseEvent *event) {
+  if (event->button() == Qt::LeftButton && drawing_) {
+    drawing_ = false;
+    setCursorStyle();
+  }
 }

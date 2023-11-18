@@ -25,18 +25,18 @@ signals:
     void positionChanged(const QPoint &position);
 
 public slots:
-    void moveSpider();
+    void moveSpider(const QPoint &target); // Изменим сигнатуру метода
 
 private:
-    QTimer *_timer;
-    QPixmap _spiderImage;
-    QPoint _position;
-    int _speed;
-    QVector<QPoint> _web;
-    QVector<QPoint> _path;
+    QTimer *timer_;
+    QPixmap spiderImage_;
+    QPoint position_;
+    int speed_;
+    QVector<QPoint> web_;
+    QVector<QPoint> path_;
 
 public:
-     QVector<QPoint> getPath() const;
+    QVector<QPoint> getPath() const;
 };
 
 #endif // SPIDER_H

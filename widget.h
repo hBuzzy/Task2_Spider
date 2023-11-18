@@ -13,16 +13,26 @@ public:
 
 protected:
     void paintEvent(QPaintEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
 
 private slots:
     void moveSpider();
     void speedSliderChanged(int value);
     void spiderPositionChanged(const QPoint &position);
+    void updateThreshold(int value);
+    void updateLineWidth(int value);
+    void setCursorStyle();
 
 private:
-    Spider *_spider;
-    int _speed;
-    QTimer *_timer;
+    Spider *spider_;
+    int speed_;
+    QTimer *timer_;
+    bool drawing_;
+    QPoint center_;
+    int lineWidth_;
+    QColor lineColor_;
 
 };
 
