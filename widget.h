@@ -19,8 +19,8 @@ protected:
 
 private slots:
     void moveSpider();
-    void speedSliderChanged(int value);
-    void spiderPositionChanged(const QPoint &position);
+    void setSpeedSliderChanged(int value);
+    void updateSpiderPositionChanged(const QPoint &position);
     void updateThreshold(int value);
     void updateLineWidth(int value);
     void setCursorStyle();
@@ -29,7 +29,7 @@ private:
     Spider *spider_;
     int speed_;
     QTimer *timer_;
-    bool drawing_;
+    bool isdrawing_;
     QPoint center_;
     int lineWidth_;
     QColor lineColor_;

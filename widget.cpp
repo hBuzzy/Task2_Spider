@@ -1,19 +1,19 @@
 // widget.cpp
 #include "widget.h"
+
 #include <QPainter>
 #include <QSlider>
 #include <QVBoxLayout>
-#include "widget.h"
 #include <QPainter>
 #include <QSlider>
 #include <QVBoxLayout>
 #include <QMouseEvent>
 #include <QDebug>
 
-Widget::Widget(QWidget *parent) : QWidget(parent), speed_(5), drawing_(false) {
+Widget::Widget(QWidget *parent) : QWidget(parent), speed_(5), isdrawing_(false) {
     setMouseTracking(true);
     spider_ = new Spider(this);
-    connect(spider_, &Spider::positionChanged, this, &Widget::spiderPositionChanged);
+    connect(spider_, &Spider::positionChanged, this, &Widget::updateSpiderPositionChanged);
 
     timer_ = new QTimer(this);
     connect(timer_, &QTimer::timeout, this, &Widget::moveSpider);
@@ -23,7 +23,7 @@ Widget::Widget(QWidget *parent) : QWidget(parent), speed_(5), drawing_(false) {
     speedSlider->setMinimum(1);
     speedSlider->setMaximum(10);
     speedSlider->setValue(5);
-    connect(speedSlider, &QSlider::valueChanged, this, &Widget::speedSliderChanged);
+    connect(speedSlider, &QSlider::valueChanged, this, &Widget::setSpeedSliderChanged);
 
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addWidget(speedSlider);
@@ -46,24 +46,24 @@ void Widget::paintEvent(QPaintEvent *event) {
     }
 }
 
-void Widget::spiderPositionChanged(const QPoint &position) {
+void Widget::updateSpiderPositionChanged(const QPoint &position) {
     update();
 }
 
-void Widget::speedSliderChanged(int value) {
+void Widget::setSpeedSliderChanged(int value) {
     speed_ = value;
     spider_->setSpeed(speed_);
 }
 
 void Widget::moveSpider() {
-    if (drawing_) {
+    if (isdrawing_) {
             QPoint globalCursorPos = mapToGlobal(center_);
             spider_->moveSpider(globalCursorPos);
         }
 }
 
 void Widget::mouseMoveEvent(QMouseEvent *event) {
-    if (drawing_) {
+    if (isdrawing_) {
         center_ = event->pos();
 
         qDebug() << center_.x() << " " << center_.y();
@@ -72,7 +72,7 @@ void Widget::mouseMoveEvent(QMouseEvent *event) {
 
 void Widget::mousePressEvent(QMouseEvent *event) {
     if (event->button() == Qt::LeftButton) {
-        drawing_ = true;
+        isdrawing_ = true;
         center_ = event->pos();
         setCursorStyle();
 
@@ -92,7 +92,7 @@ void Widget::updateLineWidth(int value) {
 }
 
 void Widget::setCursorStyle() {
-  if (drawing_) {
+  if (isdrawing_) {
     setCursor(Qt::CrossCursor);
   } else {
     setCursor(Qt::ArrowCursor);
@@ -100,8 +100,8 @@ void Widget::setCursorStyle() {
 }
 
 void Widget::mouseReleaseEvent(QMouseEvent *event) {
-  if (event->button() == Qt::LeftButton && drawing_) {
-    drawing_ = false;
+  if (event->button() == Qt::LeftButton && isdrawing_) {
+    isdrawing_ = false;
     setCursorStyle();
   }
 }

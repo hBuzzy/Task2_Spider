@@ -1,5 +1,6 @@
 // spider.cpp
 #include "spider.h"
+
 #include <QDebug>
 
 Spider::Spider(QObject *parent) : QObject(parent), speed_(2) {
