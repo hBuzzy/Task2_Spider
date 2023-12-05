@@ -7,19 +7,35 @@ Spider::Spider(QWidget *widget) : QWidget (widget), widget_(widget) {
 void Spider::MoveSpider() {
     SetNextPoint();
 
+    QPoint currentPos = spiderPos_;
+
     spiderPos_.setX(spiderPos_.x() + speed_ * spiderDirectionX_);
 
     if (spiderPos_.x() <= 0 || spiderPos_.x() >= widget_->width() - size_) {
-        spiderDirectionX_ *= -1;
-        initialRotateAngle_ *= -1;
+        spiderPos_ = currentPos;
     }
 
     spiderPos_.setY(spiderPos_.y() + speed_ * spiderDirectionY_);
 
     if (spiderPos_.y() <= 0 || spiderPos_.y() >= widget_->height() - size_) {
-        spiderDirectionY_ *= -1;
-        initialRotateAngle_ *= -1;
+        spiderPos_ = currentPos;
     }
+}
+
+void Spider::SetDirectionX(int directionX) {
+    spiderDirectionX_ = directionX;
+}
+
+void Spider::SetDirectionY(int directionY) {
+    spiderDirectionY_ = directionY;
+}
+
+int Spider::GetDirectionX() {
+    return spiderDirectionX_;
+}
+
+int Spider::GetDirectionY() {
+    return spiderDirectionY_;
 }
 
 void Spider::SetParameters() {
@@ -57,6 +73,14 @@ int Spider::GetRotateAngle() {
         return rotateAngles_[2];
     } else if (spiderDirectionX_ < 0 && spiderDirectionY_ < 0) {
         return rotateAngles_[3];
+    } else if (spiderDirectionX_ < 0 && spiderDirectionY_ == 0) {
+        return rotateAngles_[4];
+    } else if (spiderDirectionX_ == 0 && spiderDirectionY_ < 0) {
+        return rotateAngles_[5];
+    } else if (spiderDirectionX_ > 0 && spiderDirectionY_ == 0) {
+        return rotateAngles_[6];
+    } else if (spiderDirectionX_ == 0 && spiderDirectionY_ > 0) {
+        return rotateAngles_[7];
     }
     return 0;
 }

@@ -2,6 +2,7 @@
 #define WIDGET_H
 
 #include <QWidget>
+#include <QKeyEvent>
 
 #include "spider.h"
 
@@ -11,9 +12,13 @@ public:
     Widget(QWidget *parent = nullptr);
     ~Widget();
 
+    void updateSpiderMovement();
+
 protected:
-    void SetTimer();
     void paintEvent(QPaintEvent *event);
+    void keyPressEvent(QKeyEvent *event);
+    void keyReleaseEvent(QKeyEvent *event);
+
     QSize GetSizeWidget();
 
 private:
@@ -22,6 +27,11 @@ private:
     QTimer *timer_;
     int sizePoint_;
     int time_;
+
+    bool hasUpPressed_ = false;
+    bool hasDownPressed_ = false;
+    bool hasRightPressed_ = false;
+    bool hasLeftPressed_ = false;
 
     Spider *spider_;
 };

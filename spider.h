@@ -14,6 +14,10 @@ public:
     QPixmap GetRotateImage();
     QPoint GetSpiderPos();
     QVector<QPoint> GetWayPoint();
+    void SetDirectionX(int directionX);
+    void SetDirectionY(int directionY);
+    int GetDirectionX();
+    int GetDirectionY();
 
 protected:
     void SetParameters();
@@ -25,7 +29,7 @@ private:
     QPixmap rotatedSpiderImage_;
     QPoint spiderPos_;
     QVector<QPoint> wayPoints_;
-    QVector<int> rotateAngles_ = {135, 45, -135, -45};
+    QVector<int> rotateAngles_ = {135, 45, -135, -45, -90, 0, 90, 180};
     QPoint nextWayPoint_;
 
     int size_;
