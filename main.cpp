@@ -1,10 +1,10 @@
 #include <QApplication>
 
-#include "widget.h"
+#include "spider.h"
 
 int main(int argc, char *argv[]) {
   QApplication a(argc, argv);
-  Widget w;
-  w.show();
+  Spider s;
+  s.show();
   return a.exec();
 }
