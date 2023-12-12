@@ -2,13 +2,25 @@
 #define SPIDER_H
 
 #include <QObject>
+#include <QPainter>
+#include <QTimer>
 
 class Spider : public QObject {
   Q_OBJECT
  public:
-  explicit Spider(QObject *parent = nullptr);
+  Spider(QObject *parent = nullptr, int width = 50, int heigth = 50);
 
- signals:
+ public:
+  void DrawSpider(QPainter *painter, QPoint position);
+  void DrawTrack(QPainter *painter);
+  void MoveSpider();
+  void UpdateTrack(QPoint position);
+
+ private:
+  int width_;
+  int height_;
+  QPixmap pixmap_;
+  QVector<QPoint> track_;
 };
 
 #endif  // SPIDER_H
