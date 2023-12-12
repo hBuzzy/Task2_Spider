@@ -8,28 +8,35 @@
 #include <QTimer>
 
 Widget::Widget(QWidget *parent) : QWidget(parent) {
-  ellipseMoveTimer_ = new QTimer(this);
-  AddToTimerInterval(1000);
-
-  int positionYDivider = 2;
   windowRect_ = rect();
-  ellipsePosition_ =
-      QPoint(windowRect_.x(), windowRect_.height() / positionYDivider);
+  int minStep = 1;
+  int maxStep = 100;
+  spiderStepX_ = 5;
+  spiderStepY_ = 5;
+  spiderStepX_ = qBound(minStep, spiderStepX_, maxStep);
+  spiderStepY_ = qBound(minStep, spiderStepY_, maxStep);
 
-  connect(ellipseMoveTimer_, &QTimer::timeout, this, &Widget::ShowMessage);
+  spiderWidth_ = 50;
+  spiderHeight_ = 50;
+
+  int halthDevider = 2;
+  spiderPosition_ = QPoint(windowRect_.width() / halthDevider,
+                           windowRect_.height() / halthDevider);
+
+  mySpider_ = new Spider(nullptr, spiderWidth_, spiderHeight_);
+  mySpider_->UpdateTrack(spiderPosition_);
+
+  spiderMoveTimer_ = new QTimer(this);
+  AddToTimerInterval(100);
+  connect(Widget::spiderMoveTimer_, &QTimer::timeout, this,
+          &Widget::MoveSpider);
+  connect(Widget::spiderMoveTimer_, &QTimer::timeout, this,
+          &Widget::ShowMessage);
 }
 
 Widget::~Widget() {}
 
 void Widget::ShowMessage() { qDebug() << QDateTime::currentDateTime(); }
-
-void Widget::UpdateEllipsePosition() {
-  int dx = 10;
-
-  ellipsePosition_.setX(ellipsePosition_.x() + dx);
-
-  repaint();
-}
 
 void Widget::keyPressEvent(QKeyEvent *event) {
   if (event->key() == Qt::Key_Space &&
@@ -37,49 +44,34 @@ void Widget::keyPressEvent(QKeyEvent *event) {
     spiderMoveTimer_->stop();
   } else {
     spiderMoveTimer_->start();
+    if (event->key() == Qt::Key_Left) {
+      moveDirection_ = kLeftDirection_;
+    } else if (event->key() == Qt::Key_Right) {
+      moveDirection_ = kRightDirection_;
+    } else if (event->key() == Qt::Key_Up) {
+      moveDirection_ = kUpDirection_;
+    } else if (event->key() == Qt::Key_Down) {
+      moveDirection_ = kDownDirection_;
+    }
+
+    if (event->key() == Qt::Key_Shift) {
+      spiderStepX_++;
+      spiderStepY_++;
+    } else if (event->key() == Qt::Key_Control) {
+      spiderStepX_--;
+      spiderStepY_--;
+    }
   }
+
+  int minStep = 1;
+  int maxStep = 100;
+  spiderStepX_ = qBound(minStep, spiderStepX_, maxStep);
+  spiderStepY_ = qBound(minStep, spiderStepY_, maxStep);
 }
 
 void Widget::resizeEvent(QResizeEvent *event) {
   Q_UNUSED(event);
   windowRect_ = rect();
-}
-
-void Widget::mousePressEvent(QMouseEvent *event) {
-  if (event->button() == Qt::LeftButton) {
-    cursorPosition_ = event->pos();
-    isDrawingWeb_ = true;
-    ShowMousePosition();
-    setCursor(Qt::ClosedHandCursor);
-    update();
-  }
-}
-
-void Widget::mouseMoveEvent(QMouseEvent *event) {
-  if (isDrawingWeb_) {
-    cursorPosition_ = event->pos();
-
-    if (cursorPosition_.x() < windowRect_.x()) {
-      cursorPosition_.setX(0);
-    } else if (cursorPosition_.x() > windowRect_.width()) {
-      cursorPosition_.setX(width());
-    }
-
-    if (cursorPosition_.y() < windowRect_.y()) {
-      cursorPosition_.setY(0);
-    } else if (cursorPosition_.y() > windowRect_.height()) {
-      cursorPosition_.setY(height());
-    }
-
-    ShowMousePosition();
-    repaint();
-  }
-}
-
-void Widget::mouseReleaseEvent(QMouseEvent *event) {
-  Q_UNUSED(event)
-  isDrawingWeb_ = false;
-  unsetCursor();
 }
 
 void Widget::paintEvent(QPaintEvent *event) {
@@ -88,32 +80,52 @@ void Widget::paintEvent(QPaintEvent *event) {
   QPainter painter(this);
   painter.setRenderHint(QPainter::Antialiasing);
 
-  if (ellipseMoveTimer_->isActive()) {
-    DrawEllipse(&painter);
+  mySpider_->DrawSpider(&painter, spiderPosition_);
+  mySpider_->DrawTrack(&painter);
+}
+
+void Widget::MoveSpider() {
+  int halthDevider = 2;
+  int spiderCenterX = spiderWidth_ / halthDevider;
+  int spiderCenterY = spiderHeight_ / halthDevider;
+
+  if (moveDirection_ == kLeftDirection_) {
+    spiderPosition_.setX(spiderPosition_.x() - spiderStepX_);
+  } else if (moveDirection_ == kRightDirection_) {
+    spiderPosition_.setX(spiderPosition_.x() + spiderStepX_);
+  } else if (moveDirection_ == kUpDirection_) {
+    spiderPosition_.setY(spiderPosition_.y() - spiderStepY_);
+  } else if (moveDirection_ == kDownDirection_) {
+    spiderPosition_.setY(spiderPosition_.y() + spiderStepY_);
   }
-}
 
-void Widget::DrawEllipse(QPainter *painter) {
-  int width = 20;
-  int height = 20;
+  if (spiderPosition_.x() < (windowRect_.x() + spiderCenterX)) {
+    spiderPosition_.setX(spiderCenterX);
+    moveDirection_ = kRightDirection_;
+  } else if (spiderPosition_.x() > (windowRect_.width() - spiderCenterX)) {
+    spiderPosition_.setX(windowRect_.width() - spiderCenterX);
+    moveDirection_ = kLeftDirection_;
+  }
 
-  painter->setBrush(QBrush(Qt::green));
-  painter->drawEllipse(ellipsePosition_, width, height);
-}
+  if (spiderPosition_.y() < (windowRect_.y() + spiderCenterY)) {
+    spiderPosition_.setY(spiderCenterY);
+    moveDirection_ = kDownDirection_;
+  } else if (spiderPosition_.y() > (windowRect_.height() - spiderCenterY)) {
+    spiderPosition_.setY(windowRect_.height() - spiderCenterY);
+    moveDirection_ = kUpDirection_;
+  }
 
-void Widget::ShowMousePosition() {
-  setWindowTitle(QString("x: %1; y: %2;")
-                     .arg(cursorPosition_.x())
-                     .arg(cursorPosition_.y()));
+  mySpider_->UpdateTrack(spiderPosition_);
+  repaint();
 }
 
 void Widget::AddToTimerInterval(int milliseconds) {
   int minInterval = 100;
   int maxInterval = 1000;
 
-  int newInterval = ellipseMoveTimer_->interval() + milliseconds;
+  int newInterval = spiderMoveTimer_->interval() + milliseconds;
 
   newInterval = qBound(minInterval, newInterval, maxInterval);
 
-  ellipseMoveTimer_->setInterval(newInterval);
+  spiderMoveTimer_->setInterval(newInterval);
 }

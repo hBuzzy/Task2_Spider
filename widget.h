@@ -3,6 +3,8 @@
 
 #include <QWidget>
 
+#include "spider.h"
+
 class Widget : public QWidget {
   Q_OBJECT
 
@@ -12,30 +14,30 @@ class Widget : public QWidget {
 
  private slots:
   void ShowMessage();
-  void UpdateEllipsePosition();
+  void MoveSpider();
 
  protected:
-  virtual void mousePressEvent(QMouseEvent *event);
   virtual void paintEvent(QPaintEvent *event);
-  virtual void mouseMoveEvent(QMouseEvent *event);
-  virtual void mouseReleaseEvent(QMouseEvent *event);
   virtual void resizeEvent(QResizeEvent *event);
   virtual void keyPressEvent(QKeyEvent *event);
   void AddToTimerInterval(int milliseconds);
 
- private:
-  void DrawEllipse(QPainter *painter);
-  void ShowMousePosition();
-
  protected:
-  bool isDrawingWeb_;
   QTimer *spiderMoveTimer_;
   QRect windowRect_;
-  QPoint cursorPosition_;
+  QPoint spiderPosition_;
 
  private:
   int timeInterval_;
-  QTimer *ellipseMoveTimer_;
-  QPoint ellipsePosition_;
+  int spiderStepX_;
+  int spiderStepY_;
+  int spiderWidth_;
+  int spiderHeight_;
+  Spider *mySpider_;
+  QString moveDirection_;
+  const QString kRightDirection_ = "right";
+  const QString kLeftDirection_ = "left";
+  const QString kUpDirection_ = "up";
+  const QString kDownDirection_ = "down";
 };
 #endif  // WIDGET_H
