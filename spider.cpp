@@ -31,5 +31,5 @@ void Spider::speedUp() {
     }
 }
 void Spider::SetWeb(QPoint step) {
-    webPoints_.append(QPoint(position_.x()+step.x() + spiderWidth_ / 2, position_.y()+step.y() + spiderHeight_ / 2));
+    webPoints_.append(QPoint(position_.x() + step.x() + spiderWidth_ / 2, position_.y() + step.y() + spiderHeight_ / 2));
 }
