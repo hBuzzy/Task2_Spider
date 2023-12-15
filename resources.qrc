@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/resources">
+        <file>Spider.png</file>
+    </qresource>
+</RCC>
