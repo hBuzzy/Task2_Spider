@@ -16,7 +16,6 @@ QList<QPoint> Spider::getWebPoints(){return webPoints_;}
 void Spider:: moveSpider(int xStep, int yStep) {
     SetWeb(QPoint(xStep,yStep ));
     position_ = QPoint(position_.x() + xStep, position_.y() + yStep);
-
 }
 void Spider::speedDown() {
     speed_=QPoint(speed_.x() - speedChange_, speed_.y() - speedChange_);

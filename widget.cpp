@@ -36,10 +36,8 @@ void Widget::keyPressEvent(QKeyEvent *event) {
       }
     if (event->key() == Qt::Key_Q) {
         spider_.speedDown();
-
       }
     if (event->key() == Qt::Key_E) {
         spider_.speedUp();
-
       }
 }
