@@ -12,16 +12,15 @@ class Spider : public QObject {
   explicit Spider(QObject *parent = nullptr);
 
     QList<QPoint> getWebPoints();
-    void SetWeb(QPoint step);
-    QList<QPoint> SetWebPoints() ;
-    void setPosition(QPoint position);
     void moveSpider(int, int);
-    void speedUp();
-    void speedDown();
     QPoint getPosition();
     QPoint getSpiderStep();
+    void changeSpeed(int speedChange);
+    int getSpeedChange();
 
  private:
+    void SetWeb(QPoint step);
+
     QPoint position_;
     QPoint speed_;
     QList<QPoint> webPoints_;

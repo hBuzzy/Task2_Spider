@@ -4,8 +4,7 @@
 #include <QWidget>
 #include <QKeyEvent>
 #include <QPainter>
-#include <QVector>
-#include <QTimer>
+
 #include <spider.h>
 
 class Widget : public QWidget {
@@ -14,9 +13,11 @@ class Widget : public QWidget {
  public:
   Widget(QWidget *parent = nullptr);
   ~Widget();
-public:
+
+protected:
     void paintEvent(QPaintEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
+
 private:
     Spider spider_;
 };

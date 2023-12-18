@@ -17,6 +17,7 @@ void Widget::paintEvent(QPaintEvent *event) {
         }
     painter.drawPixmap(spider_.getPosition(), spiderPixmap);
 }
+
 void Widget::keyPressEvent(QKeyEvent *event) {
     if (event->key() == Qt::Key_S) {
         spider_.moveSpider(0, spider_.getSpiderStep().y());
@@ -35,9 +36,9 @@ void Widget::keyPressEvent(QKeyEvent *event) {
         repaint();
       }
     if (event->key() == Qt::Key_Q) {
-        spider_.speedDown();
+        spider_.changeSpeed(-spider_.getSpeedChange());
       }
     if (event->key() == Qt::Key_E) {
-        spider_.speedUp();
-      }
+        spider_.changeSpeed(spider_.getSpeedChange());
+    }
 }
