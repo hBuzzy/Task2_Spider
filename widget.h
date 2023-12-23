@@ -16,6 +16,7 @@ protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
 
 private slots:
     void moveSpider();
@@ -33,6 +34,14 @@ private:
     QPoint center_;
     int lineWidth_;
     QColor lineColor_;
+    bool isLeftKeyPressed_;
+    bool isRightKeyPressed_;
+    bool isUpKeyPressed_;
+    bool isDownKeyPressed_;
+    bool isLeftUpDiagonalPressed_;
+    bool isRightUpDiagonalPressed_;
+    bool isLeftDownDiagonalPressed_;
+    bool isRightDownDiagonalPressed_;
 
 };
 

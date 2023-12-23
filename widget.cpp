@@ -12,9 +12,11 @@
 
 Widget::Widget(QWidget *parent) : QWidget(parent), speed_(5), isdrawing_(false) {
     setMouseTracking(true);
+    setFocusPolicy(Qt::StrongFocus);
+    setFocus();
     spider_ = new Spider(this);
     connect(spider_, &Spider::positionChanged, this, &Widget::updateSpiderPositionChanged);
-
+    qRegisterMetaType<QPoint>("QPoint");
     timer_ = new QTimer(this);
     connect(timer_, &QTimer::timeout, this, &Widget::moveSpider);
     timer_->start(100);
@@ -23,7 +25,9 @@ Widget::Widget(QWidget *parent) : QWidget(parent), speed_(5), isdrawing_(false) 
     speedSlider->setMinimum(1);
     speedSlider->setMaximum(10);
     speedSlider->setValue(5);
+
     connect(speedSlider, &QSlider::valueChanged, this, &Widget::setSpeedSliderChanged);
+    connect(spider_, &Spider::positionChanged, this, &Widget::updateSpiderPositionChanged);
 
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addWidget(speedSlider);
@@ -104,4 +108,33 @@ void Widget::mouseReleaseEvent(QMouseEvent *event) {
     isdrawing_ = false;
     setCursorStyle();
   }
+}
+
+void Widget::keyPressEvent(QKeyEvent *event) {
+    if (isdrawing_) {
+        return;
+    }
+
+    int stepSize = 5;
+
+    switch (event->key()) {
+        case Qt::Key_Left:
+            spider_->moveSpider(spider_->getPosition() - QPoint(stepSize, 0));
+            qDebug() << "Press left";
+            break;
+        case Qt::Key_Right:
+            spider_->moveSpider(spider_->getPosition() + QPoint(stepSize, 0));
+            qDebug() << "Press right";
+            break;
+        case Qt::Key_Up:
+            spider_->moveSpider(spider_->getPosition() - QPoint(0, stepSize));
+            qDebug() << "Press up";
+            break;
+        case Qt::Key_Down:
+            spider_->moveSpider(spider_->getPosition() + QPoint(0, stepSize));
+            qDebug() << "Press down";
+            break;
+        default:
+            break;
+    }
 }
